@@ -1,23 +1,24 @@
 import socket
+import time
 import tkinter as tk
 from PIL import Image, ImageTk
+import sys
+from PySide6.QtWidgets import QApplication, QLabel
 
-# server = socket.socket()
-# server.bind(('127.0.0.1', 8888))
-# server.listen(1)
-# user, addr = server.accept()
-#
-# print("connect")
-# user.send("connect".encode("utf-8"))
 
-# while True:
-#     data = user.recv(1024)
-#     print(data.decode("utf-8"))
-#     user.send(input().encode("utf-8"))
+client = socket.socket()
+client.connect(('localhost', 8888))
+
+time.sleep(3)
+
+client.send('2'.encode('utf-8'))
+
+
 
 
 WEIGHT = 800
 HEIGHT = 600
+
 
 win = tk.Tk()
 win.title('button')
@@ -72,10 +73,13 @@ def btn1_command(btn):
     if btn1_img_counter == 0:
         btn1_img_counter += 1
         btn.config(image=btn_img_list[btn1_img_counter])
+        client.send('1'.encode('utf-8'))
         # user.send(btn1_img_counter)
     elif btn1_img_counter == 1:
         btn1_img_counter -= 1
         btn.config(image=btn_img_list[btn1_img_counter])
+
+        client.send('1'.encode('utf-8'))
 
 
 def btn2_command(btn):
@@ -83,9 +87,11 @@ def btn2_command(btn):
     if btn2_img_counter == 0:
         btn2_img_counter += 1
         btn.config(image=btn_img_list[btn2_img_counter])
+        client.send('2'.encode('utf-8'))
     elif btn2_img_counter == 1:
         btn2_img_counter -= 1
         btn.config(image=btn_img_list[btn2_img_counter])
+        client.send('2'.encode('utf-8'))
 
 
 def btn3_command(btn):
@@ -93,9 +99,11 @@ def btn3_command(btn):
     if btn3_img_counter == 0:
         btn3_img_counter += 1
         btn.config(image=btn_img_list[btn3_img_counter])
+        client.send('4'.encode('utf-8'))
     elif btn3_img_counter == 1:
         btn3_img_counter -= 1
         btn.config(image=btn_img_list[btn3_img_counter])
+        client.send('4'.encode('utf-8'))
 
 
 # server = socket.socket()
@@ -107,5 +115,5 @@ win.mainloop()
 
 
 
-
+#
 
