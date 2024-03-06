@@ -1,11 +1,10 @@
 import sys
-
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPixmap, QIcon
+from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWidgets import QApplication, QLabel, QPushButton, QWidget
-from my_server import ServerWindow
+from buttons import create_button, set_button_icon, LONG_BUTTON_HEIGHT, LONG_BUTTON_WIDTH
 
-WEIGHT = 800
+WIDTH = 800
 HEIGHT = 600
 
 
@@ -13,15 +12,27 @@ class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Button The Game")
-        self.setFixedSize(WEIGHT, HEIGHT)
+        self.setFixedSize(WIDTH, HEIGHT)
         self.setWindowFlags(Qt.WindowStaysOnTopHint)
-        self.logo_pixmap = QPixmap('img/buttons/button.png')
-        self.setWindowIcon(QIcon(self.logo_pixmap))
         self.background_pixmap = QPixmap('img/backgrounds/bg.png')
         self.background_label = QLabel(self)
         self.background_label.setPixmap(self.background_pixmap)
         self.background_label.resize(self.size())
         self.background_label.lower()
+
+        self.to_look_button = create_button(self, 'img/buttons/toLookButtonUnpressed.png',
+                                            (WIDTH - WIDTH + 100, int((HEIGHT / 3) * 2)),
+                                            self.to_look_button_clicked)
+
+        self.to_do_button = create_button(self, 'img/buttons/todoButtonUnpressed.png',
+                                          (WIDTH - LONG_BUTTON_WIDTH - 100, int((HEIGHT / 3) * 2)),
+                                          self.to_do_button_clicked)
+
+    def to_look_button_clicked(self):
+        set_button_icon(self.to_look_button, 'img/buttons/toLookButtonPressed.png')
+
+    def to_do_button_clicked(self):
+        set_button_icon(self.to_do_button, 'img/buttons/toDoButtonPressed.jpg.png')
 
 
 if __name__ == "__main__":
