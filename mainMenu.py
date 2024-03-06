@@ -3,6 +3,8 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWidgets import QApplication, QLabel, QPushButton, QWidget
 from buttons import create_button, set_button_icon, LONG_BUTTON_HEIGHT, LONG_BUTTON_WIDTH
+from subprocesses import start_client, start_server
+
 
 WIDTH = 800
 HEIGHT = 600
@@ -30,9 +32,14 @@ class MainWindow(QWidget):
 
     def to_look_button_clicked(self):
         set_button_icon(self.to_look_button, 'img/buttons/toLookButtonPressed.png')
+        start_server()
 
     def to_do_button_clicked(self):
         set_button_icon(self.to_do_button, 'img/buttons/toDoButtonPressed.jpg.png')
+        start_client()
+
+    def close_main_window(self):
+        self.close()
 
 
 if __name__ == "__main__":

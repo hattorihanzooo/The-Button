@@ -1,7 +1,8 @@
-import socket
 import sys
-from PyQt5.QtCore import Qt, pyqtSignal, QUrl
-from PyQt5.QtGui import QPixmap, QIcon
+import time
+import socket
+from PyQt5.QtCore import Qt, pyqtSignal
+from PyQt5.QtGui import QPixmap, QIcon, QFontDatabase, QFont
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel
 from threading import Thread
 
@@ -25,47 +26,56 @@ class ServerWindow(QWidget):
         self.background_label.resize(self.size())
         self.background_label.lower()
 
+        QFontDatabase.addApplicationFont('fonts/Visitor Rus.ttf')
+        self.label = QLabel('Ожидание подключения...', self)
+        self.label.setFont(QFont('Visitor_Rus', 16))
+        self.label.setStyleSheet("color: white;")
+        self.label.move(10, HEIGHT-50)
+
         self.lights = True
         self.room_window = False
 
+        self.start_server()
+
+    def start_server(self):
         # Create a socket to receive room number
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_socket.bind(('', 8888))  # Use the same port as the sender
         self.server_socket.listen(1)
-        print("Waiting for connection...")
-        self.client_socket, _ = self.server_socket.accept()
-        print("Connection established.")
 
+        print("Waiting for connection...")
+
+        # Start the thread to listen for room number
         self.listen_thread = Thread(target=self.listen_for_room)
         self.listen_thread.daemon = True
         self.listen_thread.start()
 
     def listen_for_room(self):
-        while True:
-            try:
+        try:
+            self.client_socket, _ = self.server_socket.accept()
+            print("Connection established.")
+            self.label.setText("ПОДКЛЮЧЕНО УСПЕШНО.")
+            time.sleep(3)
+            self.label.deleteLater()
+
+            while True:
                 room_number = self.client_socket.recv(1024).decode().strip()
                 if room_number:
                     if room_number == "1":
                         self.lights = not self.lights
                         self.room_changed.emit(room_number)
-
-
                         print(room_number, ' ', self.lights)
                     elif room_number == "2":
                         self.room_window = not self.room_window
                         print(room_number, ' ', self.room_window)
                     self.room_changed.emit(room_number)
-            except Exception as e:
-                print(f"Error: {e}")
-                break
+        except Exception as e:
+            print(f"Error: {e}")
 
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     server_window = ServerWindow()
-    lights = True
-    room_window = False
-
 
     def on_room_changed(room_number):
         print('gvg')
@@ -85,6 +95,6 @@ if __name__ == "__main__":
         except FileNotFoundError:
             print(f"Room {room_number} image not found.")
 
-    server_window.room_changed.connect(on_room_changed)
     server_window.show()
+    server_window.room_changed.connect(on_room_changed)
     sys.exit(app.exec_())
