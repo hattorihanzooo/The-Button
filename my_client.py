@@ -97,11 +97,11 @@ def btn3_command(btn):
     if btn3_img_counter == 0:
         btn3_img_counter += 1
         btn.config(image=btn_img_list[btn3_img_counter])
-        client.send('4'.encode('utf-8'))
+        client.send('3'.encode('utf-8'))
     elif btn3_img_counter == 1:
         btn3_img_counter -= 1
         btn.config(image=btn_img_list[btn3_img_counter])
-        client.send('4'.encode('utf-8'))
+
 
 
 # server = socket.socket()

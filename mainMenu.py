@@ -1,7 +1,7 @@
 import sys
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon, QPixmap
-from PyQt5.QtWidgets import QApplication, QLabel, QPushButton, QWidget
+from PyQt5.QtWidgets import QApplication, QLabel, QWidget
 from buttons import create_button, set_button_icon
 from subprocesses import start_client, start_server
 
