@@ -1,14 +1,14 @@
 from PyQt5.QtGui import QPixmap, QIcon
 from PyQt5.QtWidgets import QPushButton
 
-LONG_BUTTON_WIDTH = 256
-LONG_BUTTON_HEIGHT = 128
+# Этот модуль содержит в себе функции, используемые для отрисовки кнопок в Главном меню и приложении Клиента
 
 
-def create_button(parent, icon_path, position, clicked_slot):
+def create_button(parent, icon_path, position, size, clicked_slot):
     x, y = position
+    width, height = size
     button = QPushButton(parent)
-    button.setFixedSize(LONG_BUTTON_WIDTH, LONG_BUTTON_HEIGHT)
+    button.setFixedSize(width, height)
     button.setStyleSheet("QPushButton { border: none; background-color: transparent; }")
     button.move(x, y)
     button.clicked.connect(clicked_slot)
