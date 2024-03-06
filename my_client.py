@@ -34,7 +34,7 @@ fr.pack(side="bottom")
 btn_img = Image.open("img/buttons/button.png")
 btn_img = btn_img.resize((100, 100), Image.LANCZOS)
 
-bg_img = Image.open("bg.png")
+bg_img = Image.open("img/backgrounds/bg.png")
 bg_img = ImageTk.PhotoImage(bg_img)
 bg = tk.Label(win, image=bg_img)
 bg.pack()
