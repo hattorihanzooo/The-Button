@@ -1,15 +1,15 @@
 import socket
-from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtGui import QPixmap, QIcon
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit
 import sys
+from PyQt5.QtCore import Qt, pyqtSignal, QUrl
+from PyQt5.QtGui import QPixmap, QIcon
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel
 from threading import Thread
 
 WEIGHT = 800
 HEIGHT = 600
 
 
-class Window(QWidget):
+class ServerWindow(QWidget):
     room_changed = pyqtSignal(str)
 
     def __init__(self):
@@ -48,6 +48,8 @@ class Window(QWidget):
                     if room_number == "1":
                         self.lights = not self.lights
                         self.room_changed.emit(room_number)
+
+
                         print(room_number, ' ', self.lights)
                     elif room_number == "2":
                         self.room_window = not self.room_window
@@ -60,7 +62,7 @@ class Window(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    window = Window()
+    server_window = ServerWindow()
     lights = True
     room_window = False
 
@@ -68,21 +70,21 @@ if __name__ == "__main__":
     def on_room_changed(room_number):
         print('gvg')
         room_image_path = ''
-        if window.lights and window.room_window:
+        if server_window.lights and server_window.room_window:
             room_image_path = 'img/rooms/room3.jpg'
-        elif window.room_window:
+        elif server_window.room_window:
             room_image_path = 'img/rooms/room4.jpg'
-        elif window.lights:
+        elif server_window.lights:
             room_image_path = 'img/rooms/room1.jpg'
         else:
             room_image_path = 'img/rooms/room2.jpg'
 
         try:
             room_pixmap = QPixmap(room_image_path)
-            window.background_label.setPixmap(room_pixmap)
+            server_window.background_label.setPixmap(room_pixmap)
         except FileNotFoundError:
             print(f"Room {room_number} image not found.")
 
-    window.room_changed.connect(on_room_changed)
-    window.show()
+    server_window.room_changed.connect(on_room_changed)
+    server_window.show()
     sys.exit(app.exec_())

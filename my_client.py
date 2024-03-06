@@ -11,7 +11,7 @@ client.connect(('localhost', 8888))
 
 time.sleep(3)
 
-client.send('2'.encode('utf-8'))
+
 
 
 
@@ -31,7 +31,7 @@ win.resizable(False, False)
 fr = tk.Frame(win)
 fr.pack(side="bottom")
 
-btn_img = Image.open("button.png")
+btn_img = Image.open("img/buttons/button.png")
 btn_img = btn_img.resize((100, 100), Image.LANCZOS)
 
 bg_img = Image.open("bg.png")
@@ -39,7 +39,7 @@ bg_img = ImageTk.PhotoImage(bg_img)
 bg = tk.Label(win, image=bg_img)
 bg.pack()
 
-pressed_btn_img = Image.open("buttonpressed.png")
+pressed_btn_img = Image.open("img/buttons/buttonpressed.png")
 pressed_btn_img = pressed_btn_img.resize((100, 100), Image.LANCZOS)
 
 btn_img_list = [
@@ -74,11 +74,9 @@ def btn1_command(btn):
         btn1_img_counter += 1
         btn.config(image=btn_img_list[btn1_img_counter])
         client.send('1'.encode('utf-8'))
-        # user.send(btn1_img_counter)
     elif btn1_img_counter == 1:
         btn1_img_counter -= 1
         btn.config(image=btn_img_list[btn1_img_counter])
-
         client.send('1'.encode('utf-8'))
 
 
