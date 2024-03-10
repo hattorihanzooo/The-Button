@@ -15,7 +15,7 @@ class ServerWindow(QWidget):
 
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("The Button: Server")
+        self.setWindowTitle("CAM 01")
         self.setFixedSize(WEIGHT, HEIGHT)
         self.setWindowFlags(Qt.WindowStaysOnTopHint)
         self.logo_pixmap = QPixmap("img/buttons/button.png")
@@ -80,7 +80,7 @@ if __name__ == "__main__":
     server_window = ServerWindow()
 
     def on_room_changed():
-        if server_window.screamer_counter >= 10:
+        if server_window.screamer_counter >= 11:
             room_image_path = 'img/rooms/room5.jpg'
         elif server_window.lights and server_window.room_window:
             room_image_path = 'img/rooms/room3.jpg'

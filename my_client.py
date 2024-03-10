@@ -9,7 +9,7 @@ from PySide6.QtWidgets import QApplication, QLabel
 client = socket.socket()
 client.connect(('localhost', 8888))
 
-time.sleep(3)
+
 
 
 
@@ -22,8 +22,8 @@ HEIGHT = 600
 
 win = tk.Tk()
 win.title('button')
-logo = tk.PhotoImage(file='buttonimg.png')
-win.iconphoto(False, logo)
+# logo = tk.PhotoImage(file='buttonimg.png')
+# win.iconphoto(False, logo)
 win.config(bg='#afb3b6')
 win.geometry(f'{WEIGHT}x{HEIGHT}+400+100')
 win.resizable(False, False)
