@@ -66,11 +66,11 @@ class ServerWindow(QWidget):
             while True:
                 room_number = self.client_socket.recv(1024).decode()
                 if room_number:
-                    if room_number == "1":
+                    if room_number == "1" and self.screamer_counter < 10:
                         self.lights = not self.lights
                         self.room_changed.emit(room_number)
                         play_sound("sfx/metal window.wav")
-                    elif room_number == "2":
+                    elif room_number == "2" and self.screamer_counter < 10:
                         self.room_window = not self.room_window
                         self.room_changed.emit(room_number)
                         play_sound("sfx/light.wav")
@@ -84,9 +84,10 @@ if __name__ == "__main__":
     server_window = ServerWindow()
 
     def on_room_changed():
-        if server_window.screamer_counter >= 11:
-            room_image_path = 'img/rooms/room5.jpg'
+        if server_window.screamer_counter == 10:
             play_sound("sfx/scare.mp3")
+        if server_window.screamer_counter >= 10:
+            room_image_path = 'img/rooms/room5.jpg'
         elif server_window.lights and server_window.room_window:
             room_image_path = 'img/rooms/room3.jpg'
         elif server_window.room_window:

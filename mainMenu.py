@@ -50,9 +50,6 @@ class MainWindow(QWidget):
         play_sound('sfx/button.mp3')
         start_client()
 
-    def close_main_window(self):
-        self.close()
-
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

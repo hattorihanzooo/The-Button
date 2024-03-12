@@ -1,5 +1,6 @@
 import sys
 import socket
+import time
 from pygame import mixer
 from buttons import create_button, set_button_icon
 from PyQt5.QtCore import Qt
@@ -68,6 +69,8 @@ class ClientWindow(QWidget):
             self.client_socket.send('2'.encode('utf-8'))
         play_sound("sfx/button.mp3")
 
+
+
     def scare_func(self):
         if btn_counter[2] == 0:
             btn_counter[2] += 1
@@ -79,24 +82,10 @@ class ClientWindow(QWidget):
             self.client_socket.send('3'.encode('utf-8'))
         play_sound("sfx/button.mp3")
 
+
     def connect_to_server(self):
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client_socket.connect(('localhost', 8888))
-
-
-# def create_button(parent, icon_path, size, clicked_slot):
-#     width, height = size
-#     button = QPushButton(parent)
-#     button.setFixedSize(width, height)
-#     button.setStyleSheet("QPushButton { border: none; background-color: transparent; }")
-#     button.clicked.connect(clicked_slot)
-#     set_button_icon(button, icon_path)
-#     return button
-#
-#
-# def set_button_icon(button, icon_path):
-#     button.setIcon(QIcon(icon_path))
-#     button.setIconSize(button.size())
 
 
 def play_sound(sound_file):
