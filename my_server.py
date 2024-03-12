@@ -1,10 +1,12 @@
 import sys
 import time
 import socket
+import pygame
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QPixmap, QIcon, QFontDatabase, QFont
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel
 from threading import Thread
+from my_client import play_sound
 
 WEIGHT = 800
 HEIGHT = 600
@@ -67,9 +69,11 @@ class ServerWindow(QWidget):
                     if room_number == "1":
                         self.lights = not self.lights
                         self.room_changed.emit(room_number)
+                        play_sound("sfx/metal window.wav")
                     elif room_number == "2":
                         self.room_window = not self.room_window
                         self.room_changed.emit(room_number)
+                        play_sound("sfx/light.wav")
                     elif room_number == "3":
                         self.screamer_counter += 1
                         self.room_changed.emit(room_number)
@@ -82,6 +86,7 @@ if __name__ == "__main__":
     def on_room_changed():
         if server_window.screamer_counter >= 11:
             room_image_path = 'img/rooms/room5.jpg'
+            play_sound("sfx/scare.mp3")
         elif server_window.lights and server_window.room_window:
             room_image_path = 'img/rooms/room3.jpg'
         elif server_window.room_window:

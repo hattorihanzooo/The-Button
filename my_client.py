@@ -1,9 +1,9 @@
 import sys
 import socket
+import pygame
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QIcon
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QGridLayout, QMainWindow
-from buttons import create_button, set_button_icon
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QGridLayout
 
 WIDTH = 800
 HEIGHT = 600
@@ -53,7 +53,7 @@ class ClientWindow(QWidget):
             btn_counter[0] -= 1
             self.window_button.setIcon(QIcon(self.btn_pixmap))
             self.client_socket.send('1'.encode('utf-8'))
-        print(btn_counter)
+        play_sound("sfx/button.mp3")
 
     def light_func(self):
         if btn_counter[1] == 0:
@@ -64,6 +64,7 @@ class ClientWindow(QWidget):
             btn_counter[1] -= 1
             self.light_button.setIcon(QIcon(self.btn_pixmap))
             self.client_socket.send('2'.encode('utf-8'))
+        play_sound("sfx/button.mp3")
 
     def scare_func(self):
         if btn_counter[2] == 0:
@@ -74,6 +75,7 @@ class ClientWindow(QWidget):
             btn_counter[2] -= 1
             self.scare_button.setIcon(QIcon(self.btn_pixmap))
             self.client_socket.send('3'.encode('utf-8'))
+        play_sound("sfx/button.mp3")
 
     def connect_to_server(self):
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -90,9 +92,19 @@ def create_button(parent, icon_path, size, clicked_slot):
     return button
 
 
+def set_button_icon(button, icon_path):
+    button.setIcon(QIcon(icon_path))
+    button.setIconSize(button.size())
+
+
+def play_sound(sound_file):
+    pygame.mixer.init()
+    pygame.mixer.music.load(sound_file)
+    pygame.mixer.music.play()
+
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     main_window = ClientWindow()
     main_window.show()
     sys.exit(app.exec_())
-
