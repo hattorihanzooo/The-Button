@@ -1,117 +1,98 @@
-import socket
-import time
-import tkinter as tk
-from PIL import Image, ImageTk
 import sys
-from PySide6.QtWidgets import QApplication, QLabel
+import socket
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QPixmap, QIcon
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QGridLayout, QMainWindow
+from buttons import create_button, set_button_icon
 
-
-client = socket.socket()
-client.connect(('localhost', 8888))
-
-
-
-
-
-
-
-
-WEIGHT = 800
+WIDTH = 800
 HEIGHT = 600
 
+BUTTON_WIDTH = 130
+BUTTON_HEIGHT = 130
 
-win = tk.Tk()
-win.title('button')
-# logo = tk.PhotoImage(file='buttonimg.png')
-# win.iconphoto(False, logo)
-win.config(bg='#afb3b6')
-win.geometry(f'{WEIGHT}x{HEIGHT}+400+100')
-win.resizable(False, False)
-
-fr = tk.Frame(win)
-fr.pack(side="bottom")
-
-btn_img = Image.open("img/buttons/button.png")
-btn_img = btn_img.resize((100, 100), Image.LANCZOS)
-
-bg_img = Image.open("img/backgrounds/bg.png")
-bg_img = ImageTk.PhotoImage(bg_img)
-bg = tk.Label(win, image=bg_img)
-bg.pack()
-
-pressed_btn_img = Image.open("img/buttons/buttonpressed.png")
-pressed_btn_img = pressed_btn_img.resize((100, 100), Image.LANCZOS)
-
-btn_img_list = [
-    ImageTk.PhotoImage(btn_img),
-    ImageTk.PhotoImage(pressed_btn_img)
-]
-
-btn1_img_counter = 0
-btn2_img_counter = 0
-btn3_img_counter = 0
-
-btn1 = tk.Button(fr, image=btn_img_list[0], highlightthickness=0, bd=0, bg="#afb3b6", activebackground="#afb3b6")
-btn2 = tk.Button(fr, image=btn_img_list[0], highlightthickness=0, bd=0, bg="#afb3b6", activebackground="#afb3b6")
-btn3 = tk.Button(fr, image=btn_img_list[0], highlightthickness=0, bd=0, bg="#afb3b6", activebackground="#afb3b6")
-
-btn1.config(command=lambda: btn1_command(btn1))
-btn2.config(command=lambda: btn2_command(btn2))
-btn3.config(command=lambda: btn3_command(btn3))
-
-btn1.grid(row=0, column=0, ipadx=50, ipady=50)
-btn2.grid(row=0, column=1, ipadx=50, ipady=50)
-btn3.grid(row=0, column=2, ipadx=50, ipady=50)
-
-# server = socket.socket()
-# server.bind(('127.0.0.1', 8888))
-# server.listen(1)
-# user, addr = server.accept()
-
-def btn1_command(btn):
-    global btn1_img_counter
-    if btn1_img_counter == 0:
-        btn1_img_counter += 1
-        btn.config(image=btn_img_list[btn1_img_counter])
-        client.send('1'.encode('utf-8'))
-    elif btn1_img_counter == 1:
-        btn1_img_counter -= 1
-        btn.config(image=btn_img_list[btn1_img_counter])
-        client.send('1'.encode('utf-8'))
+btn_counter = [0, 0, 0]
 
 
-def btn2_command(btn):
-    global btn2_img_counter
-    if btn2_img_counter == 0:
-        btn2_img_counter += 1
-        btn.config(image=btn_img_list[btn2_img_counter])
-        client.send('2'.encode('utf-8'))
-    elif btn2_img_counter == 1:
-        btn2_img_counter -= 1
-        btn.config(image=btn_img_list[btn2_img_counter])
-        client.send('2'.encode('utf-8'))
+class ClientWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("CCTV room")
+        self.setFixedSize(WIDTH, HEIGHT)
+        self.setWindowFlags(Qt.WindowStaysOnTopHint)
+        self.logo_pixmap = QPixmap("img/buttons/button.png")
+        self.setWindowIcon(QIcon(self.logo_pixmap))
+        self.background_label = QLabel(self)
+        self.background_label.setPixmap(QPixmap('img/backgrounds/bg.png'))
+        self.background_label.resize(self.size())
+        self.background_label.lower()
+
+        self.btn_pixmap = QPixmap("img/buttons/button.png")
+        self.btn_pixmap = self.btn_pixmap.scaled(BUTTON_WIDTH, BUTTON_HEIGHT, Qt.KeepAspectRatio)
+        self.btnprsd_pixmap = QPixmap("img/buttons/buttonpressed.png")
+        self.btnprsd_pixmap = self.btnprsd_pixmap.scaled(BUTTON_WIDTH, BUTTON_HEIGHT, Qt.KeepAspectRatio)
+
+        self.window_button = create_button(self, self.btn_pixmap, [BUTTON_WIDTH, BUTTON_HEIGHT], self.window_func)
+        self.light_button = create_button(self, self.btn_pixmap, [BUTTON_WIDTH, BUTTON_HEIGHT], self.light_func)
+        self.scare_button = create_button(self, self.btn_pixmap, [BUTTON_WIDTH, BUTTON_HEIGHT], self.scare_func)
+
+        self.grid = QGridLayout(self)
+        self.grid.setContentsMargins(0, 350, 0, 0)
+        self.grid.addWidget(self.window_button, 0, 0)
+        self.grid.addWidget(self.light_button, 0, 1)
+        self.grid.addWidget(self.scare_button, 0, 2)
+
+        self.connect_to_server()
+
+    def window_func(self):
+        if btn_counter[0] == 0:
+            btn_counter[0] += 1
+            self.window_button.setIcon(QIcon(self.btnprsd_pixmap))
+            self.client_socket.send('1'.encode('utf-8'))
+        elif btn_counter[0] == 1:
+            btn_counter[0] -= 1
+            self.window_button.setIcon(QIcon(self.btn_pixmap))
+            self.client_socket.send('1'.encode('utf-8'))
+        print(btn_counter)
+
+    def light_func(self):
+        if btn_counter[1] == 0:
+            btn_counter[1] += 1
+            self.light_button.setIcon(QIcon(self.btnprsd_pixmap))
+            self.client_socket.send('2'.encode('utf-8'))
+        elif btn_counter[1] == 1:
+            btn_counter[1] -= 1
+            self.light_button.setIcon(QIcon(self.btn_pixmap))
+            self.client_socket.send('2'.encode('utf-8'))
+
+    def scare_func(self):
+        if btn_counter[2] == 0:
+            btn_counter[2] += 1
+            self.scare_button.setIcon(QIcon(self.btnprsd_pixmap))
+            self.client_socket.send('3'.encode('utf-8'))
+        elif btn_counter[2] == 1:
+            btn_counter[2] -= 1
+            self.scare_button.setIcon(QIcon(self.btn_pixmap))
+            self.client_socket.send('3'.encode('utf-8'))
+
+    def connect_to_server(self):
+        self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.client_socket.connect(('localhost', 8888))
 
 
-def btn3_command(btn):
-    global btn3_img_counter
-    if btn3_img_counter == 0:
-        btn3_img_counter += 1
-        btn.config(image=btn_img_list[btn3_img_counter])
-        client.send('3'.encode('utf-8'))
-    elif btn3_img_counter == 1:
-        btn3_img_counter -= 1
-        btn.config(image=btn_img_list[btn3_img_counter])
+def create_button(parent, icon_path, size, clicked_slot):
+    width, height = size
+    button = QPushButton(parent)
+    button.setFixedSize(width, height)
+    button.setStyleSheet("QPushButton { border: none; background-color: transparent; }")
+    button.clicked.connect(clicked_slot)
+    set_button_icon(button, icon_path)
+    return button
 
 
-
-# server = socket.socket()
-# server.bind(('127.0.0.1', 8888))
-# server.listen(1)
-# user, addr = server.accept()
-
-win.mainloop()
-
-
-
-#
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    main_window = ClientWindow()
+    main_window.show()
+    sys.exit(app.exec_())
 
