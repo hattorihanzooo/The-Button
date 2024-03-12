@@ -1,7 +1,7 @@
 import sys
 import time
 import socket
-import pygame
+from pygame import mixer
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QPixmap, QIcon, QFontDatabase, QFont
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel

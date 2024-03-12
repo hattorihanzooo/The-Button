@@ -4,13 +4,11 @@ from PyQt5.QtWidgets import QPushButton
 # Этот модуль содержит в себе функции, используемые для отрисовки кнопок в Главном меню и приложении Клиента
 
 
-def create_button(parent, icon_path, position, size, clicked_slot):
-    x, y = position
+def create_button(parent, icon_path, size, clicked_slot):
     width, height = size
     button = QPushButton(parent)
     button.setFixedSize(width, height)
     button.setStyleSheet("QPushButton { border: none; background-color: transparent; }")
-    button.move(x, y)
     button.clicked.connect(clicked_slot)
     set_button_icon(button, icon_path)
     return button

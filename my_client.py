@@ -1,6 +1,7 @@
 import sys
 import socket
-import pygame
+from pygame import mixer
+from buttons import create_button, set_button_icon
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QIcon
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QGridLayout
@@ -33,9 +34,10 @@ class ClientWindow(QWidget):
         self.btnprsd_pixmap = self.btnprsd_pixmap.scaled(BUTTON_WIDTH, BUTTON_HEIGHT, Qt.KeepAspectRatio)
 
         self.window_button = create_button(self, self.btn_pixmap, [BUTTON_WIDTH, BUTTON_HEIGHT], self.window_func)
-        self.light_button = create_button(self, self.btn_pixmap, [BUTTON_WIDTH, BUTTON_HEIGHT], self.light_func)
+        self.light_button = create_button(self, self.btn_pixmap,  [BUTTON_WIDTH, BUTTON_HEIGHT], self.light_func)
         self.scare_button = create_button(self, self.btn_pixmap, [BUTTON_WIDTH, BUTTON_HEIGHT], self.scare_func)
 
+        # Сетка для удобства расположения кнопок
         self.grid = QGridLayout(self)
         self.grid.setContentsMargins(0, 350, 0, 0)
         self.grid.addWidget(self.window_button, 0, 0)
@@ -82,25 +84,25 @@ class ClientWindow(QWidget):
         self.client_socket.connect(('localhost', 8888))
 
 
-def create_button(parent, icon_path, size, clicked_slot):
-    width, height = size
-    button = QPushButton(parent)
-    button.setFixedSize(width, height)
-    button.setStyleSheet("QPushButton { border: none; background-color: transparent; }")
-    button.clicked.connect(clicked_slot)
-    set_button_icon(button, icon_path)
-    return button
-
-
-def set_button_icon(button, icon_path):
-    button.setIcon(QIcon(icon_path))
-    button.setIconSize(button.size())
+# def create_button(parent, icon_path, size, clicked_slot):
+#     width, height = size
+#     button = QPushButton(parent)
+#     button.setFixedSize(width, height)
+#     button.setStyleSheet("QPushButton { border: none; background-color: transparent; }")
+#     button.clicked.connect(clicked_slot)
+#     set_button_icon(button, icon_path)
+#     return button
+#
+#
+# def set_button_icon(button, icon_path):
+#     button.setIcon(QIcon(icon_path))
+#     button.setIconSize(button.size())
 
 
 def play_sound(sound_file):
-    pygame.mixer.init()
-    pygame.mixer.music.load(sound_file)
-    pygame.mixer.music.play()
+    mixer.init()
+    mixer.music.load(sound_file)
+    mixer.music.play()
 
 
 if __name__ == "__main__":

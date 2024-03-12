@@ -1,9 +1,11 @@
 import sys
+from pygame import mixer
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon, QPixmap
-from PyQt5.QtWidgets import QApplication, QLabel, QWidget
+from PyQt5.QtWidgets import QApplication, QLabel, QWidget, QGridLayout
 from buttons import create_button, set_button_icon
 from subprocesses import start_client, start_server
+from my_client import play_sound
 
 WIDTH = 800
 HEIGHT = 600
@@ -26,21 +28,26 @@ class MainWindow(QWidget):
         self.background_label.lower()
 
         self.to_look_button = create_button(self, 'img/buttons/toLookButtonUnpressed.png',
-                                            (WIDTH - WIDTH + 100, int((HEIGHT / 3) * 2)),
                                             (LONG_BUTTON_WIDTH, LONG_BUTTON_HEIGHT),
                                             self.to_look_button_clicked)
 
         self.to_do_button = create_button(self, 'img/buttons/todoButtonUnpressed.png',
-                                          (WIDTH - LONG_BUTTON_WIDTH - 100, int((HEIGHT / 3) * 2)),
                                           (LONG_BUTTON_WIDTH, LONG_BUTTON_HEIGHT),
                                           self.to_do_button_clicked)
 
+        self.grid = QGridLayout(self)
+        self.grid.setContentsMargins(0, 350, 0, 0)
+        self.grid.addWidget(self.to_look_button, 0, 0)
+        self.grid.addWidget(self.to_do_button, 0, 1)
+
     def to_look_button_clicked(self):
         set_button_icon(self.to_look_button, 'img/buttons/toLookButtonPressed.png')
+        play_sound('sfx/button.mp3')
         start_server()
 
     def to_do_button_clicked(self):
         set_button_icon(self.to_do_button, 'img/buttons/toDoButtonPressed.jpg.png')
+        play_sound('sfx/button.mp3')
         start_client()
 
     def close_main_window(self):
