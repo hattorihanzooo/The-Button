@@ -5,7 +5,7 @@ from pygame import mixer
 from buttons import create_button, set_button_icon
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QIcon
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QGridLayout
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QGridLayout, QInputDialog
 
 WIDTH = 800
 HEIGHT = 600
@@ -45,6 +45,8 @@ class ClientWindow(QWidget):
         self.grid.addWidget(self.light_button, 0, 1)
         self.grid.addWidget(self.scare_button, 0, 2)
 
+        self.ip_address = QInputDialog.getText(self, 'Ввод IP', 'Enter IP:')
+
         self.connect_to_server()
 
     def window_func(self):
@@ -82,7 +84,7 @@ class ClientWindow(QWidget):
 
     def connect_to_server(self):
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.client_socket.connect(('localhost', 8888))
+        self.client_socket.connect((self.ip_address[0], 8888))
 
 
 def play_sound(sound_file):

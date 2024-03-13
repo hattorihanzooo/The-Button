@@ -4,7 +4,7 @@ import socket
 from pygame import mixer
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QPixmap, QIcon, QFontDatabase, QFont
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QMessageBox, QInputDialog
 from threading import Thread
 from my_client import play_sound
 
@@ -42,13 +42,14 @@ class ServerWindow(QWidget):
         self.server_socket = None
         self.client_socket = None
 
+        self.ip_address = QInputDialog.getText(self, 'Ввод IP', 'Enter IP:')
+
         self.start_server()
 
     def start_server(self):
         # Создание сокета для подключения Клиента
-
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server_socket.bind(('', 8888))
+        self.server_socket.bind((self.ip_address[0], 8888))
         self.server_socket.listen(1)
 
         # Создание потока для прослушивания значений кнопок
