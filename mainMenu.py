@@ -1,4 +1,5 @@
 import sys
+import time
 from pygame import mixer
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon, QPixmap
@@ -44,11 +45,17 @@ class MainWindow(QWidget):
         set_button_icon(self.to_look_button, 'img/buttons/toLookButtonPressed.png')
         play_sound('sfx/button.mp3')
         start_server()
+        self.hide()
+        time.sleep(1)
+        self.close()
 
     def to_do_button_clicked(self):
         set_button_icon(self.to_do_button, 'img/buttons/toDoButtonPressed.jpg.png')
         play_sound('sfx/button.mp3')
         start_client()
+        self.hide()
+        time.sleep(1)
+        self.close()
 
 
 if __name__ == "__main__":

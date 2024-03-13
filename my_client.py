@@ -69,8 +69,6 @@ class ClientWindow(QWidget):
             self.client_socket.send('2'.encode('utf-8'))
         play_sound("sfx/button.mp3")
 
-
-
     def scare_func(self):
         if btn_counter[2] == 0:
             btn_counter[2] += 1
@@ -81,7 +79,6 @@ class ClientWindow(QWidget):
             self.scare_button.setIcon(QIcon(self.btn_pixmap))
             self.client_socket.send('3'.encode('utf-8'))
         play_sound("sfx/button.mp3")
-
 
     def connect_to_server(self):
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
