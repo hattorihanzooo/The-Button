@@ -1,11 +1,10 @@
 import sys
 import socket
-import time
 from pygame import mixer
-from buttons import create_button, set_button_icon
+from buttons import create_button
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QIcon
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QGridLayout, QInputDialog
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QGridLayout, QInputDialog
 
 WIDTH = 800
 HEIGHT = 600
@@ -19,6 +18,7 @@ btn_counter = [0, 0, 0]
 class ClientWindow(QWidget):
     def __init__(self):
         super().__init__()
+
         self.setWindowTitle("CCTV room")
         self.setFixedSize(WIDTH, HEIGHT)
         self.setWindowFlags(Qt.WindowStaysOnTopHint)

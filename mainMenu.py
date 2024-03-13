@@ -1,6 +1,5 @@
 import sys
 import time
-from pygame import mixer
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWidgets import QApplication, QLabel, QWidget, QGridLayout
@@ -18,6 +17,7 @@ LONG_BUTTON_HEIGHT = 128
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
+
         self.setWindowTitle("The Button")
         self.setFixedSize(WIDTH, HEIGHT)
         self.setWindowFlags(Qt.WindowStaysOnTopHint)

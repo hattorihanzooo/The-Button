@@ -1,10 +1,9 @@
 import sys
 import time
 import socket
-from pygame import mixer
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QPixmap, QIcon, QFontDatabase, QFont
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QMessageBox, QInputDialog
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QInputDialog
 from threading import Thread
 from my_client import play_sound
 
@@ -17,6 +16,7 @@ class ServerWindow(QWidget):
 
     def __init__(self):
         super().__init__()
+
         self.setWindowTitle("CAM 01")
         self.setFixedSize(WEIGHT, HEIGHT)
         self.setWindowFlags(Qt.WindowStaysOnTopHint)
@@ -32,7 +32,7 @@ class ServerWindow(QWidget):
         self.label = QLabel('Ожидание подключения...', self)
         self.label.setFont(QFont('Visitor_Rus', 16))
         self.label.setStyleSheet("color: white;")
-        self.label.move(10, HEIGHT-50)
+        self.label.move(10, HEIGHT - 50)
 
         self.lights = True
         self.room_window = False
@@ -59,30 +59,31 @@ class ServerWindow(QWidget):
         self.listen_thread.start()
 
     def listen_for_room(self):
-            self.client_socket, _ = self.server_socket.accept()
-            self.label.setText("Подключено успешно.")
-            time.sleep(3)
-            self.label.deleteLater()
+        self.client_socket, _ = self.server_socket.accept()
+        self.label.setText("Подключено успешно.")
+        time.sleep(3)
+        self.label.deleteLater()
 
-            while True:
-                room_number = self.client_socket.recv(1024).decode()
-                if room_number:
-                    if room_number == "1" and self.screamer_counter < 10:
-                        self.lights = not self.lights
-                        self.room_changed.emit(room_number)
-                        play_sound("sfx/metal window.wav")
-                    elif room_number == "2" and self.screamer_counter < 10:
-                        self.room_window = not self.room_window
-                        self.room_changed.emit(room_number)
-                        play_sound("sfx/light.wav")
-                    elif room_number == "3":
-                        self.screamer_counter += 1
-                        self.room_changed.emit(room_number)
+        while True:
+            room_number = self.client_socket.recv(1024).decode()
+            if room_number:
+                if room_number == "1" and self.screamer_counter < 10:
+                    self.lights = not self.lights
+                    self.room_changed.emit(room_number)
+                    play_sound("sfx/metal window.wav")
+                elif room_number == "2" and self.screamer_counter < 10:
+                    self.room_window = not self.room_window
+                    self.room_changed.emit(room_number)
+                    play_sound("sfx/light.wav")
+                elif room_number == "3":
+                    self.screamer_counter += 1
+                    self.room_changed.emit(room_number)
 
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     server_window = ServerWindow()
+
 
     def on_room_changed():
         if server_window.screamer_counter == 10:
@@ -100,6 +101,7 @@ if __name__ == "__main__":
 
         room_pixmap = QPixmap(room_image_path)
         server_window.background_label.setPixmap(room_pixmap)
+
 
     server_window.show()
     server_window.room_changed.connect(on_room_changed)
